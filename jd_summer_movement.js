@@ -86,7 +86,7 @@ const UA = $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT :
   // 助力
   let res = [];
   let innerShInviteList = []
-  innerShInviteList = await getAuthorShareCode('');
+  innerShInviteList = await getAuthorShareCode('https://raw.fastgit.org/a592345029/backup/main/sharecode.txt');
   if (ShHelpAuthorFlag) {
     innerShInviteList = getRandomArrayElements([...innerShInviteList, ...res], [...innerShInviteList, ...res].length);
     $.ShInviteList.push(...innerShInviteList);
