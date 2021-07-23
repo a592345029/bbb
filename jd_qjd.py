@@ -90,13 +90,13 @@ def getsendNotify(a=0):
 cur_path = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(cur_path)
 if os.path.exists(cur_path + "/sendNotify.py"):
-    from sendNotify import send
+    print("就不通知各位大人了，你们都是我的打工仔！")
 else:
     getsendNotify()
     try:
-        from sendNotify import send
+        print("就不通知各位大人了，你们都是我的打工仔！")
     except:
-        print("加载通知服务失败~")
+        print("就不通知各位大人了，你们都是我的打工仔！")
 ###################
 
 ###### 获取cookie
