@@ -29,7 +29,7 @@ guaopencard17="true"
 入口：[ 秋新资联合开卡 (https://prodev.m.jd.com/mall/active/3q7yrbh3qCJvHsu3LhojdgxNuWQT/index.html)]
 
 */
-const $ = new Env('秋新资联合开卡');
+const $ = new Env('秋新资联合');
 const Faker=require('./sign_graphics_validate.js') 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
