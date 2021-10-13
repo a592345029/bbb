@@ -20,9 +20,9 @@ const api = got.extend({
 });
 
 let ShowSuccess = "false",
-CKAlwaysNotify = "false",
+CKAlwaysNotify = "true",
 CKAutoEnable = "true",
-NoWarnError = "true";
+NoWarnError = "false";
 
 let MessageUserGp2 = "";
 let MessageUserGp3 = "";
