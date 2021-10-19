@@ -27,10 +27,10 @@ if ($.isNode()) {
         return;
     }
     
-    authorCodeList = await getAuthorCodeList('')
+    authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz1_go.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            '123',
+            'ec4b9f40e526489986657f3701ec1330',
         ]
     }
 
