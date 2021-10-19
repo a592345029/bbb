@@ -37,7 +37,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = [
-  ''
+ 'RtGKzuyhEAKjd9KaH9Ewg8q74gpEv_Qhf6Gqp_fxG3Qd_csJkw'
 ]
 !(async () => {
   if (!cookiesArr[0]) {
