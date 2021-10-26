@@ -1,12 +1,14 @@
 /*
 城城领现金
 cron 0 0-23/1 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_city.js
-说明：助力第一个CK和脚本内置作者助力码，介意勿跑
+说明：默认助力第一个CK和脚本内置作者助力码，介意勿跑
+环境变量：CITYHELP, 脚本助力哪一个CK，默认助力第一个CK； 例：CITYHELP="3"，则助力第3个CK
  */
 const $ = new Env('城城领现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let exchangeFlag = $.getdata('jdJxdExchange') || false;//是否开启自动抽奖，建议活动快结束开启，默认关闭
+const helpIndex = $.isNode() ? (process.env.CITYHELP ? process.env.CITYHELP : `999`):`999`;//环境变量：CITYHELP, 脚本助力哪一个CK，默认助力第一个CK； 例：CITYHELP="3"，则助力第3个CK
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -19,6 +21,8 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let insertCodes = []
 let inviteCodes = []
+let UA = '',uuid = '';
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -38,7 +42,6 @@ let inviteCodes = []
         }else{
             insertCodes = getRandomArrayElements(res,res.length);
         }
-        //$.newShareCodes.push(...shareUuid)
     }
     console.log(JSON.stringify(insertCodes));
     await requireConfig();
@@ -47,7 +50,7 @@ let inviteCodes = []
     } else {
         console.log(`脚本默认在10.30日自动开启抽奖,如需现在自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
     }
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i = 0; i < cookiesArr.length && inviteCodes.length === 0; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -55,6 +58,8 @@ let inviteCodes = []
             $.isLogin = true;
             $.nickName = '';
             message = '';
+            UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
+            uuid = UA.split(';')[4]
             await TotalBean();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
@@ -68,12 +73,17 @@ let inviteCodes = []
             await main();
         }
     }
+    if(inviteCodes.length === 0){
+        return ;
+    }
     console.log('\n##################开始账号内互助#################\n');
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
         $.index = i + 1;
         $.canHelp = true;
+        UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
+        uuid = UA.split(';')[4]
         if (!cookie) continue
         for (let code of inviteCodes) {
             if ($.UserName === code['user']) continue;
@@ -125,6 +135,14 @@ let inviteCodes = []
         $.done();
     })
 
+function randomString(e) {
+    e = e || 32;
+    let t = "abcdef0123456789", a = t.length, n = "";
+    for (let i = 0; i < e; i++)
+        n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
+
 function getRandomArrayElements(arr, count) {
     var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
     while (i-- > min) {getRandomArrayElements
@@ -167,20 +185,20 @@ async function main() {
 function taskPostUrl(functionId,body) {
     return {
         url: `${JD_API_HOST}`,
-        body: `functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
+        body: `functionId=${functionId}&body=${JSON.stringify(body)}&client=wh5&clientVersion=1.0.0&uuid=${uuid}`,
         headers: {
             'Cookie': cookie,
             'Host': 'api.m.jd.com',
             'Connection': 'keep-alive',
             'Content-Type': 'application/x-www-form-urlencoded',
-            "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+            "User-Agent": UA,
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
         }
     }
 }
 function getInfo(inviteId, flag = false) {
-    let body = {"lbsCity":"19","realLbsCity":"1601","inviteId":inviteId,"headImg":"","userName":""}
+    let body = {"lbsCity":"1","realLbsCity":"2953","inviteId":inviteId,"headImg":"","userName":"","taskChannel":"1"}
     return new Promise((resolve) => {
         $.post(taskPostUrl("city_getHomeData",body), async (err, resp, data) => {
             try {
@@ -195,7 +213,12 @@ function getInfo(inviteId, flag = false) {
                             if (data.data && data['data']['bizCode'] === 0) {
                                 if (flag) console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data && data.data.result.userActBaseInfo.inviteId}\n`);
                                 if (flag) console.log(`【京东账号${$.index}（${$.UserName}）当前现金】${data.data && data.data.result.userActBaseInfo.poolMoney}元`);
-                                if (data.data && data.data.result.userActBaseInfo.inviteId && inviteCodes.length === 0) {
+                                if (data.data && data.data.result.userActBaseInfo.inviteId && inviteCodes.length === 0 && helpIndex === '999') {
+                                    inviteCodes.push({
+                                        user: $.UserName,
+                                        code: data.data.result.userActBaseInfo.inviteId
+                                    });
+                                }else if (data.data && data.data.result.userActBaseInfo.inviteId && inviteCodes.length === 0 && Number(helpIndex) === Number($.index)) {
                                     inviteCodes.push({
                                         user: $.UserName,
                                         code: data.data.result.userActBaseInfo.inviteId
@@ -324,7 +347,7 @@ function TotalBean() {
                 "Connection": "keep-alive",
                 "Cookie": cookie,
                 "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+                "User-Agent": UA,
             }
         }
         $.post(options, (err, resp, data) => {
