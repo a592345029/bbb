@@ -86,9 +86,9 @@ if ($.isNode()) {
   }
   let res = await getAuthorShareCode('https://raw.fastgit.org/a592345029/backup/main/cfd.json')
   if (!res) {
-    $.http.get({url: ''}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
+    $.http.get({url: 'https://raw.fastgit.org/a592345029/backup/main/cfd.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
     await $.wait(1000)
-    res = await getAuthorShareCode('')
+    res = await getAuthorShareCode('https://raw.fastgit.org/a592345029/backup/main/cfd.json')
   }
   $.strMyShareIds = [...(res && res.shareId || [])]
   await shareCodesFormat()
