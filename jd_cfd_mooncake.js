@@ -85,11 +85,11 @@ if ($.isNode()) {
     }
   }
   let res = await getAuthorShareCode('https://raw.fastgit.org/a592345029/backup/main/cfd.json')
-  if (!res) {
-    $.http.get({url: 'https://raw.fastgit.org/a592345029/backup/main/cfd.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
-    await $.wait(1000)
-    res = await getAuthorShareCode('https://raw.fastgit.org/a592345029/backup/main/cfd.json')
-  }
+//  if (!res) {
+//    $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
+//    await $.wait(1000)
+//    res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json')
+//  }
   $.strMyShareIds = [...(res && res.shareId || [])]
   await shareCodesFormat()
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -636,7 +636,7 @@ function showMsg() {
 
 function readShareCode() {
   return new Promise(async resolve => {
-    $.get({url: ``, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://transfer.nz.lu/cfd`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(JSON.stringify(err))
