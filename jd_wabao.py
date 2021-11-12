@@ -21,7 +21,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 JD_API_HOST = 'https://api.m.jd.com'
-run_send='yes'     # yes或no, yes则启用通知推送服务
+run_send='no'     # yes或no, yes则启用通知推送服务
 
 
 # 获取pin
