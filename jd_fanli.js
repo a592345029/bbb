@@ -24,8 +24,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '', personMessage = '';
 
-let lz_cookie = {}
-
+let lz_cookie = {};
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -52,12 +51,12 @@ if ($.isNode()) {
         if (cookiesArr[i]) {
             if ($.runOut)
                 break;
-            $.hasGet = 0
-                cookie = cookiesArr[i]
-                originCookie = cookiesArr[i]
-                newCookie = ''
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-                $.index = i + 1;
+            $.hasGet = 0;
+            cookie = cookiesArr[i];
+            originCookie = cookiesArr[i];
+            newCookie = '';
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+            $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
             await checkCookie();
@@ -74,29 +73,34 @@ if ($.isNode()) {
             await getTaskFinishCount(cookiesArr[i])
             await $.wait(2000)
             if ($.count.finishCount < $.count.maxTaskCount) {
-                let range = $.count.maxTaskCount - $.count.finishCount
-                    for (let j = 0; j < range; j++) {
-                        console.log(`开始第${$.count.finishCount+j+1}次`)
-
-                        await getTaskList(cookie)
-                        await $.wait(2000)
-                        for (let k in $.taskList) {
-                            if ($.taskList[k].taskId !== null && $.taskList[k].status == 1) {
-                                console.log(`开始尝试活动:` + $.taskList[k].taskName);
-                                await saveTaskRecord(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType)
-                                if ($.sendBody) {
-                                    await $.wait(Number($.taskList[k].watchTime) * 1300)
-                                    await saveTaskRecord1(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType, $.sendBody.uid, $.sendBody.tt)
-                                } else {
-                                    continue;
-                                }
-                                if ($.count.finishCount = $.count.maxTaskCount) {
-                                    console.log(`任务全部完成!`);
-                                }
-                            }
-
+                
+                let range = $.count.maxTaskCount - $.count.finishCount;
+                await getTaskList(cookie)
+                await $.wait(2000)
+				var CountDoTask =0;
+				 
+                for (let k in $.taskList) {
+                    if ($.taskList[k].taskId !== null && $.taskList[k].statusName != "活动结束" && $.taskList[k].statusName != "明日再来") {
+						CountDoTask+=0;
+                        console.log(`开始尝试活动:` + $.taskList[k].taskName);
+                        await saveTaskRecord(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType);
+                        if ($.sendBody) {
+                            await $.wait(Number($.taskList[k].watchTime) * 1300);
+                            await saveTaskRecord1(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType, $.sendBody.uid, $.sendBody.tt);
+                        } else {
+                            continue;
+                        }
+                        if ($.count.finishCount = $.count.maxTaskCount) {
+                            console.log(`任务全部完成!`);                           
+                            break;
                         }
                     }
+
+                }
+				if (CountDoTask==0 && $.count.finishCount < $.count.maxTaskCount){
+					console.log("活动已经结束，明天请早.");
+				}
+               
 
             } else {
                 console.log("任务已做完")
@@ -205,7 +209,7 @@ function saveTaskRecord1(ck, taskId, businessId, taskType, uid, tt) {
                     if (data) {
                         data = JSON.parse(data);
                         if (data.content) {
-                            if (data.content.status = 1)
+                            if (data.content.status == 1 && data.content.beans > 0)
                                 $.count.finishCount += 1;
                             console.log("浏览结果", data.content.msg);
                         } else
