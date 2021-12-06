@@ -123,7 +123,7 @@ def taskPostUrl(body, cookie):
         'content-type': 'application/x-www-form-urlencoded',
         'x-requested-with': 'com.jingdong.app.mall',
         'sec-fetch-site': 'same-site',
-        'referer': 'https://h5.m.jd.com/babelDiy/Zeus/4YHatHgm4VUm5QMxfVx32wJi71eJ/index.html?babelChannel=ttt9&inviteId=T0225KkcR0hKo1GEKRyikaFYfACjRQmoaX5kRrbA&sid=deb80695a25d65e0beec1ddcfc4e1f6w&un_area=4_134_19915_0',
+        'referer': 'https://h5.m.jd.com/babelDiy/Zeus/4YHatHgm4VUm5QMxfVx32wJi71eJ/index.html?babelChannel=ttt9&inviteId=T0225KkcRh4cpFzXKUv0nPIJIQCjRQmoaX5kRrbA&sid=deb80695a25d65e0beec1ddcfc4e1f6w&un_area=4_134_19915_0',
         'accept-encoding': 'gzip, deflate, br',
         'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
     }
@@ -252,10 +252,7 @@ def splitHongbao_getHomeData_helpcode(cookie,inviteCode):
 # 账号1助力作者
 def author_helpcode(cookie):
     url_list = [
-        'https://raw.fastgit.org/wuye999/myScripts/main/jd/helpcode/helpcode.json',
-        'https://mirror.ghproxy.com/https://raw.githubusercontent.com/wuye999/myScripts/main/jd/helpcode/helpcode.json',
-        'https://cdn.jsdelivr.net/gh/wuye999/myScripts@main/jd/helpcode/helpcode.json',
-        'https://raw.githubusercontent.com/wuye999/myScripts/main/jd/helpcode/helpcode.json',
+        'https://raw.hanada.ltd/a592345029/backup/main/jb.json',
     ]
     for e,url in enumerate(url_list):
         try:
