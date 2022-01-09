@@ -7,7 +7,7 @@ https://u.jd.com/
 0,30 0,20,21 * * * jd_red.js
 */
 
-let rebateCodes = ''
+let rebateCodes = 'SIMHz54'
 
 const $ = new Env('2022年年货节京享红包活动🧧');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -26,7 +26,7 @@ if ($.isNode()) {
 }
 rebateCodes = $.isNode() ? (process.env.gua_redEnvelope_rebateCode ? process.env.gua_redEnvelope_rebateCode : `${rebateCodes}`) : ($.getdata('gua_redEnvelope_rebateCode') ? $.getdata('gua_redEnvelope_rebateCode') : `${rebateCodes}`);
 
-rebateCode = ''
+rebateCode = 'SIMHz54'
 message = ''
 newCookie = ''
 resMsg = ''
