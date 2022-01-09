@@ -30,9 +30,9 @@ let UA = '',uuid = '';
     }
     console.log(`注意：助力第一个CK和脚本内置作者助力码，介意勿跑，等待10秒`);
     let res = [];
-    try{res = await getAuthorShareCode('');}catch (e) {}
+    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/a592345029/backup/main/city.json');}catch (e) {}
     if(!res){
-        try{res = await getAuthorShareCode('');}catch (e) {}
+        try{res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/a592345029/backup@main/city.json');}catch (e) {}
         if(!res){res = [];}
     }
     if(res.length > 0){
