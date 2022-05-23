@@ -1,17 +1,44 @@
 /*
-店铺签到，各类店铺签到，有新的店铺直接添加token即可
-============Quantumultx===============
-[task_local]
-#店铺签到
-15 2,14 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js, tag=店铺签到, enabled=true
-===========Loon============
-[Script]
-cron "15 2,14 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js,tag=店铺签到
-============Surge=============
-店铺签到 = type=cron,cronexp="15 2,14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js
-===========小火箭========
-店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.jss, cronexpr="15 2,14 * * *", timeout=3600, enable=true
+cron 10 1 0,23 * * * jd_dpqd.js
+店铺签到，店铺Token默认从本地环境变量DPQDTK中获取，若本地无则从远端获取。
+
+Fix by HarbourJ
+TG: https://t.me/HarbourToulu
+
+环境变量:
+DPQDTK: token1&token2
+仓库不再提供token
 */
+
+let token = []
+if (process.env.DPQDTK) {
+  if (process.env.DPQDTK.includes('\n')) {
+    token = [...process.env.DPQDTK.split('\n'),...token]
+  } else {
+    token = [...process.env.DPQDTK.split('&'),...token]
+  }
+}
+
+if (!token.length) {
+  console.log('无本地店铺签到token, 尝试获取远端店铺签到token')
+  token = [
+    '4BE1B58FE1360409A5967CAD1127B5A8',
+    '870578A1A13AE44064447021958FD78D',
+    '6CCFD0588DF59A6547E6F1D55425119E',
+    '146A3A8DF19FBC854AF557B04928F041',
+    '6E7CD5A4159DC56A5F923EC6E1B85289',
+    '3B27B2B9E70249C339D66F27B7E133F0',
+    '9F64084BD36FE0EBCDE1EDC956656501',
+    'D6A4BC4C997D3BCAD11D35CA38E7A822',
+    'BE1EC6F403754AD413B02ED8127256D9',
+    '99F86B29C0918FD834B6B7E6FD5C9BBC',
+    '6E17F5CA6235652ED187A39224CB5BF4',
+    'ABFA0B23A09E4F55ACC06028EFE36385',
+    '4BE1B58FE1360409A5967CAD1127B5A8',
+    'A104F9DECDC7DF424B4771073FBA5685',
+  ]
+}
+console.log(token)
 const $ = new Env('店铺签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -24,35 +51,6 @@ let activityId=''
 let vender=''
 let num=0
 let shopname=''
-const token = [
-  "34864F266AFC02DDB7EEAD5A2AF9B4F7",
-  "87DC11A01AE814025159ECE32F5EECBF",
-  "3BA9AEE39889419A46E8784C982C7280",
-  "09947018BD0B4AC7E218519F81551296",
-  "18FB7E1DE514D5E40D880585D4145DEC",
-  "DB00412CD5F5853526FB3A3B1662A7F3",
-  "CACEC89AD3A20309748FEC03B0B0C50C",
-  "D881655EDC90A9B4387ACFE495CA3F18",
-  "35F3ED7E5BDFCE58F95E01695927EC24",
-  "D40F4D162DD53F2CE9F1C48176461634",
-  "3AF4B68A4BB3BD09D371B766E6A1B721",
-  "273EC9E9CA27DFDD85478972A1A0ED6F",
-  "A5BD60451DC9BCB10EB6009C18679D70",
-  "3B27B2B9E70249C339D66F27B7E133F0",
-  "99B695DFEF69DD31BB78B58D61B9C6A2",
-  "6CB820BAC6C0CD8D1F90C342F0EA1018",
-  "ADF510FDA71E07151B8F8AD4964A5D90",
-  "37F05E334A3F6D36E54E13892CE379A9",
-  "A5BD60451DC9BCB10EB6009C18679D70",
-  "71DC699CFECAD1BBA618F412D8B54943",
-  "038B83D1D0D374F58821C7EDC4F3B5AE",
-  "0EED5C32E8002D6EF892D3995A0A9AA5",
-  "D5A12069E47F17718EF7E7381444A5FE",
-  "CFE4E21426A3E633238CBA33DEBE693E",
-  "501933E61B74CEE450856EDD10AAF7CB",
-  "9F64084BD36FE0EBCDE1EDC956656501",
-  "7516691B34E89137D3C911BBF7D86ACD"
-]
 
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
