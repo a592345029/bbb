@@ -1,14 +1,17 @@
-if (process.env.JD_19E != "true") {
-    console.log('\n默认不运行,安全性自行衡量,设置变量export JD_19E="true"来运行\n')
-    return
-}
-
 /*
+热爱奇旅膨胀红包内部互助
 11 20 * * * jd_19EPZ_help.js
+
+TG: https://t.me/HarbourToulu
 
 变量：
 export PZ="助力码"
 */
+
+if (process.env.JD_19E != "true") {
+    console.log('\n默认不运行,安全性自行衡量,设置变量export JD_19E="true"来运行\n')
+    return
+}
 
 const $ = new Env('热爱奇旅膨胀内部互助');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
