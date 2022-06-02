@@ -10,7 +10,7 @@ JOY通用
 cron:2 1 * 1 *
 ============Quantumultx===============
 [task_local]
-2 1 * * * jd_joyopen.js, tag=JOY通用开卡活动, enabled=true
+2 1 * 5 * jd_joyopen.js, tag=JOY通用开卡活动, enabled=true
 
 */
 const $ = new Env('JOY通用');
